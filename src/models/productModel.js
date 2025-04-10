@@ -14,6 +14,17 @@ class ProductModel {
             })
         );
     };
+    create = async (name, price, category, brand, stock) =>{
+        return await prisma.product.create({
+            data: {
+              name,
+              price,
+              category,
+              brand,
+              stock
+            },
+          });
+    }
 };
 
 export default new ProductModel;
