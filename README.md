@@ -30,27 +30,33 @@ Este projeto é uma API para gerenciar produtos de um e-commerce. Ele permite cr
 ```bash
 git clone https://github.com/pedro-ols/api_e-commerce.git
 cd api-ecommerce
+```
 
 ### 2. Instale as dependências
 Certifique-se de que você tem o Node.js instalado. Em seguida, execute:
 
 ```bash
 npm install
+```
 
 ### 3. Configure o banco de dados
 O projeto utiliza o Prisma como ORM. Para configurar o banco de dados, siga os passos abaixo:
 
 Crie o arquivo .env na raiz do projeto e adicione a URL do banco de dados:
-
+```bash
 DATABASE_URL="file:./dev.db"
+```
 
 Gere o banco de dados e as migrações:
-
-npx prisma migrate dev --name init
+```bash
+npx prisma migrate dev product init
+```
 
 3.Inicie o servidor
 
+```bash
 npm run dev
+```
 
 🧪 Testando com Thunder Client
 Abra o Thunder Client no Visual Studio Code.
@@ -59,6 +65,7 @@ Adicione as requisições para as rotas mencionadas acima.
 Envie as requisições e verifique as respostas.
 
 📂 Estrutura do Projeto
+```bash
 api_e-commerce/
 ├── prisma/
 │   ├── schema.prisma       # Configuração do Prisma
@@ -72,6 +79,7 @@ api_e-commerce/
 │   ├── prismaClient.js           # Configuração do Prisma Client
 ├── .env                          # Variáveis de ambiente
 ├── [package.json](http://_vscodecontentref_/0)                  # Dependências do projeto
+```
 
 🛡️ Licença
 Este projeto está sob a licença MIT. Sinta-se à vontade para usá-lo e modificá-lo conforme necessário.
