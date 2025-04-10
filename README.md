@@ -42,29 +42,29 @@ npm install
 ### 3. Configure o banco de dados
 O projeto utiliza o Prisma como ORM. Para configurar o banco de dados, siga os passos abaixo:
 
-Crie o arquivo .env na raiz do projeto e adicione a URL do banco de dados:
+### Crie o arquivo .env na raiz do projeto e adicione a URL do banco de dados:
 ```bash
 DATABASE_URL="file:./dev.db"
 ```
 
-Gere o banco de dados e as migrações:
+### Gere o banco de dados e as migrações:
 ```bash
 npx prisma migrate dev product init
 ```
 
-3.Inicie o servidor
+### Inicie o servidor
 
 ```bash
 npm run dev
 ```
 
-🧪 Testando com Thunder Client
+## 🧪 Testando com Thunder Client
 Abra o Thunder Client no Visual Studio Code.
 Crie uma nova coleção chamada API E-commerce.
 Adicione as requisições para as rotas mencionadas acima.
 Envie as requisições e verifique as respostas.
 
-📂 Estrutura do Projeto
+## 📂 Estrutura do Projeto
 ```bash
 api_e-commerce/
 ├── prisma/
@@ -81,8 +81,8 @@ api_e-commerce/
 ├── [package.json](http://_vscodecontentref_/0)                  # Dependências do projeto
 ```
 
-🛡️ Licença
+## 🛡️ Licença
 Este projeto está sob a licença MIT. Sinta-se à vontade para usá-lo e modificá-lo conforme necessário.
 
-📞 Contato
+## 📞 Contato
 Se você tiver dúvidas ou sugestões, entre em contato pelo e-mail: pedro.o.santos7@aluno.senai.br
