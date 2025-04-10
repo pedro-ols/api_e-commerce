@@ -82,7 +82,7 @@ api_e-commerce/
 ```
 
 ## 🛡️ Licença
-Este projeto está sob a licença MIT. Sinta-se à vontade para usá-lo e modificá-lo conforme necessário.
+Este projeto está sob a licença MIT. Sinta-se à vontade para usá-lo e modificá-lo conforme necessário, desde de que sua alteração respeite as normas da licença.
 
 ## 📞 Contato
 Se você tiver dúvidas ou sugestões, entre em contato pelo e-mail: pedro.o.santos7@aluno.senai.br
