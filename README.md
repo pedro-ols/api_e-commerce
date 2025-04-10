@@ -1,278 +1,80 @@
-# Aula: Configuração de Projeto Backend com Prisma
+# API de E-commerce
 
-## Cabeçalho de Aula
+Este projeto é uma API para gerenciar produtos de um e-commerce. Ele permite criar, listar, atualizar e deletar produtos. A API foi desenvolvida utilizando Node.js, Express e Prisma como ORM, e o **Thunder Client** foi utilizado para testar as requisições.
 
-**Habilidades Trabalhadas:**
+---
 
-- Desenvolvimento de APIs RESTful com Node.js
-- Integração de ORM (Prisma) com projetos backend
-- Modelagem de dados e persistência
-- Tratamento de erros em aplicações assíncronas
-- Refatoração de código para padrões modernos
+## 🚀 Funcionalidades
 
-## Introdução
+- **Listar todos os produtos**: `GET /products`
+- **Buscar um produto por ID**: `GET /products/:id`
+- **Criar um novo produto**: `POST /products`
+- **Atualizar um produto existente**: `PUT /products/:id`
+- **Deletar um produto**: `DELETE /products/:id`
 
-Nesta aula, vamos transformar um projeto backend que utiliza armazenamento em memória para um que utiliza banco de dados persistente através do Prisma ORM. Esta refatoração é um passo importante para criar aplicações escaláveis e robustas.
+---
 
-## Passo a Passo da Configuração
+## 🛠️ Tecnologias Utilizadas
 
-### 1. Instalando o Prisma
+- **Node.js**: Ambiente de execução JavaScript.
+- **Express**: Framework para criação de APIs.
+- **Prisma**: ORM para manipulação do banco de dados.
+- **SQLite**: Banco de dados utilizado no desenvolvimento.
+- **Thunder Client**: Ferramenta para testar as requisições HTTP.
 
-Primeiro, instale os pacotes necessários e inicialize o Prisma:
+---
 
+## 📦 Instalação e Configuração
+
+### 1. Clone o repositório
 ```bash
-npm install prisma @prisma/client
-npx prisma init
-```
+git clone https://github.com/pedro-ols/api_e-commerce.git
+cd api-ecommerce
 
-### 2. Configurando o arquivo .env
-
-Crie ou modifique o arquivo `.env` na raiz do projeto:
-
-```
-DATABASE_URL="file:./dev.db"
-```
-
-Este é o caminho para o banco SQLite que será usado no desenvolvimento.
-
-### 3. Criando o arquivo schema.prisma
-
-O Prisma já criou o arquivo `prisma/schema.prisma`. Modifique-o conforme o modelo final:
-
-```prisma
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-model Task {
-  id        Int     @id @default(autoincrement())
-  descricao String
-  concluida Boolean @default(false)
-  criadaEm  DateTime @default(now())
-
-  @@map("tasks")
-}
-```
-
-### 4. Criando o cliente Prisma
-
-Crie o arquivo `prisma/client.js`:
-
-```javascript
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
-
-export default prisma;
-```
-
-### 5. Executando a migração inicial
-
-Execute o comando para criar a migração e aplicá-la ao banco de dados:
-
-```bash
-npx prisma migrate dev --name init
-```
-
-### 6. Refatorando o modelo (tarefaModel.js)
-
-Modifique o arquivo `src/models/tarefaModel.js` para usar o Prisma:
-
-```javascript
-import prisma from "../../prisma/client.js";
-
-class TarefaModel {
-  getAll = async () => {
-    return await prisma.task.findMany();
-  };
-
-  create = async (descricao) => {
-    return await prisma.task.create({
-      data: {
-        descricao,
-      },
-    });
-  };
-
-  update = async (id, concluida) => {
-    try {
-      return await prisma.task.update({
-        where: { id },
-        data: {
-          concluida: concluida !== undefined ? concluida : true,
-        },
-      });
-    } catch (error) {
-      // Se a tarefa não for encontrada, o Prisma lançará uma exceção
-      if (error.code === "P2025") {
-        return null;
-      }
-      throw error;
-    }
-  };
-
-  delete = async (id) => {
-    try {
-      await prisma.task.delete({
-        where: { id },
-      });
-      return true;
-    } catch (error) {
-      // Se a tarefa não for encontrada, o Prisma lançará uma exceção
-      if (error.code === "P2025") {
-        return false;
-      }
-      throw error;
-    }
-  };
-
-  getById = async (id) => {
-    return await prisma.task.findUnique({
-      where: { id },
-    });
-  };
-}
-
-export default new TarefaModel();
-```
-
-### 7. Refatorando o controlador (tarefaController.js)
-
-Modifique o arquivo `src/controllers/tarefaController.js` para trabalhar com operações assíncronas:
-
-```javascript
-import tarefaModel from "../models/tarefaModel.js";
-
-class TarefaController {
-  getAll = async (req, res) => {
-    try {
-      const tarefas = await tarefaModel.getAll();
-      res.json(tarefas);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ erro: "Erro ao buscar tarefas" });
-    }
-  };
-
-  create = async (req, res) => {
-    const { descricao } = req.body;
-    try {
-      if (!descricao) {
-        return res.status(400).json({ erro: "Descrição é obrigatória" });
-      }
-      const novaTarefa = await tarefaModel.create(descricao);
-      res.status(201).json(novaTarefa);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ erro: "Erro ao criar tarefa" });
-    }
-  };
-
-  update = async (req, res) => {
-    const { id } = req.params;
-    const { concluida } = req.body;
-
-    try {
-      const tarefaAtualizada = await tarefaModel.update(
-        parseInt(id),
-        concluida
-      );
-
-      if (!tarefaAtualizada) {
-        return res.status(404).json({ erro: "Tarefa não encontrada" });
-      }
-
-      res.json(tarefaAtualizada);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ erro: "Erro ao atualizar tarefa" });
-    }
-  };
-
-  delete = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-      const sucesso = await tarefaModel.delete(parseInt(id));
-
-      if (!sucesso) {
-        return res.status(404).json({ erro: "Tarefa não encontrada" });
-      }
-
-      res.status(204).send();
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ erro: "Erro ao excluir tarefa" });
-    }
-  };
-
-  getById = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-      const tarefa = await tarefaModel.getById(parseInt(id));
-
-      if (!tarefa) {
-        return res.status(404).json({ erro: "Tarefa não encontrada" });
-      }
-
-      res.json(tarefa);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ erro: "Erro ao buscar tarefa" });
-    }
-  };
-}
-
-export default new TarefaController();
-```
-
-### 8. Atualizando as rotas
-
-Se quiser implementar a nova rota `getById` no arquivo de rotas:
-
-```javascript
-import express from "express";
-import tarefaController from "../controllers/tarefaController.js";
-const router = express.Router();
-
-router.get("/", tarefaController.getAll);
-router.get("/:id", tarefaController.getById); // Nova rota
-router.post("/", tarefaController.create);
-router.put("/:id", tarefaController.update);
-router.delete("/:id", tarefaController.delete);
-
-export default router;
-```
-
-## Principais Mudanças na Refatoração
-
-1. **Operações Assíncronas**: Todas as operações de banco de dados são assíncronas, utilizando `async/await`
-2. **Tratamento de Erros**: Implementação de blocos try/catch para lidar com exceções do Prisma
-3. **Persistência de Dados**: Os dados agora são armazenados em um banco SQLite em vez de memória
-4. **Tipagem Automática**: O Prisma gera tipos TypeScript automaticamente para os modelos
-
-## Passos Após Git Clone
-
-1. Instale as dependências do projeto:
+### 2. Instale as dependências
+Certifique-se de que você tem o Node.js instalado. Em seguida, execute:
 
 ```bash
 npm install
-```
 
-2. Crie o arquivo `.env` com a variável `DATABASE_URL` apontando para o banco de dados desejado.
+### 3. Configure o banco de dados
+O projeto utiliza o Prisma como ORM. Para configurar o banco de dados, siga os passos abaixo:
 
-```
+Crie o arquivo .env na raiz do projeto e adicione a URL do banco de dados:
+
 DATABASE_URL="file:./dev.db"
-```
 
-3. Execute as migrações:
+Gere o banco de dados e as migrações:
 
-```bash
-npx prisma migrate dev
-```
+npx prisma migrate dev --name init
+
+3.Inicie o servidor
+
+npm run dev
+
+🧪 Testando com Thunder Client
+Abra o Thunder Client no Visual Studio Code.
+Crie uma nova coleção chamada API E-commerce.
+Adicione as requisições para as rotas mencionadas acima.
+Envie as requisições e verifique as respostas.
+
+📂 Estrutura do Projeto
+api_e-commerce/
+├── prisma/
+│   ├── schema.prisma       # Configuração do Prisma
+├── src/
+│   ├── controllers/
+│   │   └── productController.js  # Controladores das rotas
+│   ├── models/
+│   │   └── productModel.js       # Lógica de acesso ao banco de dados
+│   ├── routes/
+│   │   └── productRoutes.js      # Rotas da API
+│   ├── prismaClient.js           # Configuração do Prisma Client
+├── .env                          # Variáveis de ambiente
+├── [package.json](http://_vscodecontentref_/0)                  # Dependências do projeto
+
+🛡️ Licença
+Este projeto está sob a licença MIT. Sinta-se à vontade para usá-lo e modificá-lo conforme necessário.
+
+📞 Contato
+Se você tiver dúvidas ou sugestões, entre em contato pelo e-mail: pedro.o.santos7@aluno.senai.br
