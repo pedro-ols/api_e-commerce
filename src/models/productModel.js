@@ -6,6 +6,14 @@ class ProductModel {
             await prisma.product.findMany()
         );
     };
+
+    getById = async (id) =>{
+        return(
+            await prisma.product.findUnique({
+                where: { id },
+            })
+        );
+    };
 };
 
 export default new ProductModel;
