@@ -22,3 +22,16 @@ model Task {
 
   @@map("tasks")
 }
+
+model Product {
+  id Int @id@default(autoincrement())
+  name String
+  price Int 
+  category String
+  brand String 
+  stock Int 
+  imageUrl String?
+  isActive Boolean?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
