@@ -10,7 +10,7 @@ router.get("/:id", ProductController.getById);
 // Rota que cadastra um novo produto
 router.post("/", ProductController.create);
 // Rota que atualiza as informações de um produto
-// router.put("/", ProductController.update);
+router.put("/:id", ProductController.update);
 //Rota que deleta o cadastro de um produto
 // router.delete("/", ProductController.delete);
 
