@@ -1,15 +1,17 @@
 import express from "express";
-import ProductControlles from "../controllers/productController.js";
+import ProductController from "../controllers/productController.js";
 
 const router = express.Router();
 
 // Rota que retorna todos os produtos cadastrados
-router.get("/", tarefaController.getAll);
+router.get("/", ProductController.getAll);
 // Rota que busca um produto filtra por seu ID (chave primária)
-router.get("/:id", tarefaController.getByID);
+// router.get("/:id", ProductController.getByID);
 // Rota que cadastra um novo produto
-router.post("/", tarefaController.create);
+// router.post("/", ProductController.create);
 // Rota que atualiza as informações de um produto
-router.get("/", tarefaController.update);
+// router.put("/", ProductController.update);
 //Rota que deleta o cadastro de um produto
-router.get("/", tarefaController.delete);
+// router.delete("/", ProductController.delete);
+
+export default router;
