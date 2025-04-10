@@ -12,6 +12,6 @@ router.post("/", ProductController.create);
 // Rota que atualiza as informações de um produto
 router.put("/:id", ProductController.update);
 //Rota que deleta o cadastro de um produto
-// router.delete("/", ProductController.delete);
+router.delete("/:id", ProductController.delete);
 
 export default router;
